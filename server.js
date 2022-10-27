@@ -11,6 +11,13 @@ const app = express();
 // res.json() allows us to return JSON instead of a buffer, string, or static file
 app.get("/api/notes", (req, res) => res.json(db));
 
+// Add a static middleware for serving assets in the public folder
+app.use(express.static("public"));
+
+app.get("/", (req, res) =>
+  res.sendFile(path.join(__dirname, "/public/index.html"))
+);
+
 app.listen(PORT, () =>
   console.log(`Example app listening at http://localhost:${PORT}`)
 );
