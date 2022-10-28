@@ -19,7 +19,13 @@ app.use(express.urlencoded({ extended: true }));
 //app.use("/api", api);
 
 // res.json() allows us to return JSON instead of a buffer, string, or static file
-app.get("/api/notes", (req, res) => res.json(db));
+//app.get("/api/notes", (req, res) => res.json(db));
+
+// GET Route for retrieving all the tips
+app.get("/api/notes", (req, res) => {
+  console.info(`${req.method} request received for notes`);
+  readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
+});
 
 // Add a static middleware for serving assets in the public folder
 app.use(express.static("public"));
