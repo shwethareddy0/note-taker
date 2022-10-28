@@ -1,19 +1,17 @@
-// Import express package
+// Import required packages
 const express = require("express");
 const path = require("path");
-//const { clog } = require("./middleware/clog");
 const { v4: uuidv4 } = require("uuid");
 const {
   readFromFile,
   readAndAppend,
   writeToFile,
 } = require("./helpers/fsUtils");
-// uuidv4();
 
 // Require the JSON file and assign it to a variable called `termData`
-const db = require("./db/db.json");
+const Notes = require("./db/db.json");
 
-const PORT = 3002;
+const PORT = process.env.PORT || 3001;
 
 // Initialize our app variable by setting it to the value of express()
 const app = express();
@@ -21,12 +19,8 @@ const app = express();
 // Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//app.use("/api", api);
 
-// res.json() allows us to return JSON instead of a buffer, string, or static file
-//app.get("/api/notes", (req, res) => res.json(db));
-
-// GET Route for retrieving all the tips
+// GET Route for retrieving all the notes
 app.get("/api/notes", (req, res) => {
   console.info(`${req.method} request received for notes`);
   readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
@@ -34,10 +28,12 @@ app.get("/api/notes", (req, res) => {
 
 // Add a static middleware for serving assets in the public folder
 app.use(express.static("public"));
+
 // GET Route for homepage
 app.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "/public/index.html"))
 );
+
 // GET Route for notes page
 app.get("/notes", (req, res) =>
   res.sendFile(path.join(__dirname, "/public/notes.html"))
@@ -57,29 +53,31 @@ app.post("/api/notes", (req, res) => {
     };
 
     readAndAppend(newNote, "./db/db.json");
-    res.json(`Note added successfully 🚀`);
+    res.json(`Note is added successfully 🚀`);
   } else {
     res.error("Error in adding a note");
   }
 });
 
+// Removing the note from the notes
 app.delete("/api/notes/:id", function (req, res) {
   var id = req.params.id;
-  var currentNote;
-  for (var i = 0; i < db.length; i++) {
-    currentNote = db[i];
-    if (currentNote) {
-      if (currentNote.id === id) {
-        db.splice(i, 1);
+  var selectedNote;
+  for (var i = 0; i < Notes.length; i++) {
+    selectedNote = Notes[i];
+    if (selectedNote) {
+      if (selectedNote.id === id) {
+        Notes.splice(i, 1);
         break;
       }
     }
   }
 
-  writeToFile("./db/db.json", db);
-  return res.json(currentNote);
+  writeToFile("./db/db.json", Notes);
+  return res.json(selectedNote);
 });
 
-app.listen(PORT, () =>
-  console.log(`Example app listening at http://localhost:${PORT}`)
-);
+//Start the server listening on the designated port
+app.listen(PORT, () => {
+  console.log("App listening on PORT " + PORT);
+});
