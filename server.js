@@ -3,11 +3,16 @@ const express = require("express");
 const path = require("path");
 //const { clog } = require("./middleware/clog");
 const { v4: uuidv4 } = require("uuid");
-const { readFromFile, readAndAppend } = require("./helpers/fsUtils");
+const {
+  readFromFile,
+  readAndAppend,
+  writeToFile,
+} = require("./helpers/fsUtils");
 // uuidv4();
 
 // Require the JSON file and assign it to a variable called `termData`
 const db = require("./db/db.json");
+
 const PORT = 3002;
 
 // Initialize our app variable by setting it to the value of express()
@@ -56,6 +61,23 @@ app.post("/api/notes", (req, res) => {
   } else {
     res.error("Error in adding a note");
   }
+});
+
+app.delete("/api/notes/:id", function (req, res) {
+  var id = req.params.id;
+  var currentNote;
+  for (var i = 0; i < db.length; i++) {
+    currentNote = db[i];
+    if (currentNote) {
+      if (currentNote.id === id) {
+        db.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  writeToFile("./db/db.json", db);
+  return res.json(currentNote);
 });
 
 app.listen(PORT, () =>

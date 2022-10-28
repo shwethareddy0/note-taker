@@ -3,25 +3,5 @@
         "title": "Test Title",
         "text": "Test text",
         "id": "e982cbb8-de4f-47a5-840c-82adda72890c"
-    },
-    {
-        "title": "Shopping",
-        "text": "shop a bag",
-        "id": "e982cbb8-de4f-47a5-840c-82adda72800c"
-    },
-    {
-        "title": "grocery",
-        "text": "produce",
-        "id": "9e19467b-ca58-4a80-bf0d-2c5a3aaa9a56"
-    },
-    {
-        "title": "pen",
-        "text": "pen",
-        "id": "314dbb1a-4605-46dd-9aab-67a0cd375c72"
-    },
-    {
-        "title": "Movie",
-        "text": "watch a movies",
-        "id": "875890d6-5dbc-44c5-ab9e-a9742169e94f"
     }
 ]
