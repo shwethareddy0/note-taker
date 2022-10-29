@@ -9,7 +9,7 @@ Here is the link to the [deployed application]()
 ### Features
 
 - Easy to use
-- Provide options to wroite, save and delet the notes
+- Provide options to write, save and delete the notes
 - Generates a responsive webpage
 
 ## Table of Contents
