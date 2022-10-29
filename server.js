@@ -9,9 +9,9 @@ const {
 } = require("./helpers/fsUtils");
 
 // Require the JSON file and assign it to a variable called `termData`
-const Notes = require("./db/db.json");
+let Notes = require("./db/db.json");
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 // Initialize our app variable by setting it to the value of express()
 const app = express();
@@ -23,7 +23,10 @@ app.use(express.urlencoded({ extended: true }));
 // GET Route for retrieving all the notes
 app.get("/api/notes", (req, res) => {
   console.info(`${req.method} request received for notes`);
-  readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
+  readFromFile("./db/db.json").then((data) => {
+    Notes = JSON.parse(data);
+    res.json(Notes);
+  });
 });
 
 // Add a static middleware for serving assets in the public folder
@@ -62,18 +65,19 @@ app.post("/api/notes", (req, res) => {
 // Removing the note from the notes
 app.delete("/api/notes/:id", function (req, res) {
   var id = req.params.id;
+  const notesCopy = JSON.parse(JSON.stringify(Notes));
+
   var selectedNote;
-  for (var i = 0; i < Notes.length; i++) {
-    selectedNote = Notes[i];
+  for (var i = 0; i < notesCopy.length; i++) {
+    selectedNote = notesCopy[i];
     if (selectedNote) {
       if (selectedNote.id === id) {
-        Notes.splice(i, 1);
+        notesCopy.splice(i, 1);
         break;
       }
     }
   }
-
-  writeToFile("./db/db.json", Notes);
+  writeToFile("./db/db.json", notesCopy);
   return res.json(selectedNote);
 });
 
